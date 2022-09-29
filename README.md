@@ -2,8 +2,9 @@
 В этом проекте будет создаваться рекомендательная система, которая будет способна предлагать слушателям новые музыкальные композиции.
 
 ### Команда
-- Галанов Максим @maxglnv
-- Виктория Ширяева @shiryaevva
-- Бояркин Николай @zendeer
-- Прохоров Савелий (куратор) @Savely_Prokhorov
-
+|| telegram |
+| ------ | ------ |
+| Галанов Максим | [@maxglnv](https://t.me/maxglnv) |
+| Виктория Ширяева| [@shiryaevva](https://t.me/shiryaevva) |
+| Бояркин Николай| [@zendeer](https://t.me/zendeer) |
+| Прохоров Савелий (куратор)| [@Savely_Prokhorov](https://t.me/Savely_Prokhorov) |
