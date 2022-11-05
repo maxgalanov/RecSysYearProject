@@ -85,7 +85,7 @@
 - 273 936 уникальных трека, для которых определен стиль
 
 ### Датасет data10000.csv
-Это 1% от основного датасета, полученного из [The Million Song Dataset](http://www.millionsongdataset.com/pages/getting-dataset/#subset) с помощью написанного нами парсера [Parser_for_10k.ipynb](https://github.com/shiryaevva/RecSysYearProject/blob/main/hse_rec_sys/notebooks/Parser_for_10k.ipynb). Набор данных содержит информацию о 10 000 треках:
+Это 1% от основного датасета, полученного из [The Million Song Dataset](http://www.millionsongdataset.com/pages/getting-dataset/#subset) с помощью написанного нами парсера [Parser_for_10k.ipynb](https://github.com/maxgalanov/RecSysYearProject/blob/main/hse_rec_sys/notebooks/Parser_for_10k.ipynb). Набор данных содержит информацию о 10 000 треках:
 - artist_name - имя исполнителя
 - artist_familarity - популярность исполнителя
 - artist_hotttnesss -  алгоритмическая оценка 🔥 исполнителя
