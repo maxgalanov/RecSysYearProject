@@ -1,5 +1,5 @@
 # Описание raw_data
-Все датасеты получены из [The Million Song Dataset](http://millionsongdataset.com/) - это открытый набор данных для миллиона современных популярных музыкальных треков.
+Данные находятся в репозитории в [hse_rec_sys/data/raw/](https://github.com/maxgalanov/RecSysYearProject/blob/main/hse_rec_sys/data/raw/raw_data_links.txt). Все датасеты получены из [The Million Song Dataset](http://millionsongdataset.com/) - это открытый набор данных для миллиона современных популярных музыкальных треков.
 
 ### Датасет train_triplets.txt
 Датасет получен из [Taste Profile dataset](http://millionsongdataset.com/tasteprofile/). Набор данных содержит реальное количество прослушиваний (count_play) пользователями (user_id), все песни сопоставляются с датасетом MSD по song_id.
