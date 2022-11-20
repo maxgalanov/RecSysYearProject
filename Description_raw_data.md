@@ -70,17 +70,19 @@
 ### Датасет msd_beatunes_map.txt
 Данные получены из [The Last.fm Dataset](http://millionsongdataset.com/lastfm/). Набор данных содержит информацию о жанрах треков:
 - track_id - идентификатор песни из MSD
-- seed_genre - жанр песни
+- seed_genre - поджанр песни
+- numberOfUserLabels
+- [label, strength]
 
-| track_id | seed_genre |
-| ------ | ------ |
-| TRAAAAK128F9318786 | Rock |
-| TRAAAAV128F421A322 | Rock |
-| TRAAAAW128F429D538 | Hip-Hop |
+| track_id | seed_genre | numberOfUserLabels | [label, strength] |
+| ------ | ------ | | ------ | ------ |
+| TRAAAAK128F9318786 | Rock | 201 | Rock	0.6766169	Metal	0.09950249	Hard Rock	0.04477612	Alternative	0.03482587	Alt. Rock	0.029850746 ... |
+| TRAAAAV128F421A322 | Rock | 8 | Rock	0.5	Punk	0.5 |
+| TRAAAAW128F429D538 | Hip-Hop | 133 | Hip-Hop	0.48872182	Hip-Hop/Rap	0.2706767	Rap	0.09022556 ... |
 
 Цифры:
-- 6 151 уникальный жанр
-- 677 038 уникальных трека, для которых определен жанр
+- 6 151 уникальный поджанр
+- 677 038 уникальных трека, для которых определен поджанр
 
 ### Датасет msd-MAGD-genreAssignment.txt
 Данные получены из [Million Song Dataset Benchmarks](http://www.ifs.tuwien.ac.at/mir/msd/partitions/msd-MAGD-genreAssignment.cls). Набор данных содержит информацию о жанрах треков:
@@ -97,22 +99,22 @@
 - 21 уникальный жанр
 - 422 714 уникальных трека, для которых определен жанр
   
-  
 
-### Датасет msd-MASD-styleAssignment.txt
-Данные получены из [Million Song Dataset Benchmarks](http://www.ifs.tuwien.ac.at/mir/msd/partitions/msd-MASD-styleAssignment.cls). Набор данных содержит информацию о стилях треков:
+### Датасет msd_lastfm_map.txt
+Данные получены из [The Last.fm Dataset](http://millionsongdataset.com/lastfm/). Набор данных содержит информацию о стилях треков:
 - track_id - идентификатор песни из MSD
-- style - жанр песни
+- seed_genre - поджанр песни
+- [tag, strength]
 
-| track_id | style |
-| ------ | ------ |
-| TRAAAAK128F9318786 | Metal_Alternative |
-| TRAAAAV128F421A322 | Punk |
-| TRAAAAW128F429D538 | Hip_Hop_Rap |
+| track_id | seed_genre | [tag, strength] |
+| ------ | ------ | ------ |
+| TRAAAAK128F9318786 | rock | alternativerock	100	rock	60	hardrock	60	heavymetal	20... |
+| TRAAAAW128F429D538 | bayarea | bayarea	100	hieroglyiphics	100	classic	50... |
+| TRAAABD128F429CF47 | oldies | 60s	100	soul	52	pop	41	rock	35	malevocalists	35... |
 
 Цифры:
-- 25 уникальных стилей
-- 273 936 уникальных трека, для которых определен стиль
+- 35 048 уникальных поджанров
+- 505 216 уникальных трека, для которых определен поджанр
 
 ### Датасет data10000.csv
 Это 1% от основного датасета, полученного из [The Million Song Dataset](http://www.millionsongdataset.com/pages/getting-dataset/#subset) с помощью написанного нами парсера [Parser_for_10k.ipynb](https://github.com/maxgalanov/RecSysYearProject/blob/main/hse_rec_sys/notebooks/Parser_for_10k.ipynb). Набор данных содержит информацию о 10 000 треках:
