@@ -75,7 +75,7 @@
 - [label, strength]
 
 | track_id | seed_genre | numberOfUserLabels | [label, strength] |
-| ------ | ------ | | ------ | ------ |
+| ------ | ------ | ------ | ------ |
 | TRAAAAK128F9318786 | Rock | 201 | Rock	0.6766169	Metal	0.09950249	Hard Rock	0.04477612	Alternative	0.03482587	Alt. Rock	0.029850746 ... |
 | TRAAAAV128F421A322 | Rock | 8 | Rock	0.5	Punk	0.5 |
 | TRAAAAW128F429D538 | Hip-Hop | 133 | Hip-Hop	0.48872182	Hip-Hop/Rap	0.2706767	Rap	0.09022556 ... |
