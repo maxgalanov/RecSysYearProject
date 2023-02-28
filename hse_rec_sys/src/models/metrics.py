@@ -1,3 +1,4 @@
+from sklearn.metrics import ndcg_score
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
@@ -134,6 +135,44 @@ def MAR_k(true, pred, k):
     score = np.mean([AR_k(a, p, k) for a, p in zip(true, pred)])
     
     return score
+
+
+def nDCG_k(y_true, y_pred, k=None):
+    """
+    Calculates the Normalized Discounted Cumulative Gain (NDCG) score.
+
+    Parameters
+    ----------
+    y_true : list of lists
+        List of lists with the true items for each user.
+    y_pred : list of lists
+        List of lists with the predicted items for each user.
+    k : int, optional
+        The number of items to consider for the NDCG calculation. If not
+        specified, all items will be considered.
+
+    Returns
+    -------
+    ndcg : float
+        The NDCG score.
+    """
+    ndcg = 0.0
+    for i in range(len(y_true)):
+        idcg = 0.0
+        dcg = 0.0
+        if k:
+            tr = y_true[i]
+            pr = list(y_pred[i][:k])
+        for j, item in enumerate(pr):
+            if item in tr:
+                idcg += 1.0 / np.log2(j + 2)
+                dcg += 1.0 / np.log2(pr.index(item) + 2)
+        if idcg == 0.0:
+            continue
+        ndcg += dcg / idcg
+        
+    ndcg = ndcg / len(y_true)
+    return ndcg
 
 
 def calculate_coverage(pred, num_songs):
