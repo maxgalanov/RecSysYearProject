@@ -23,13 +23,13 @@ def precision_k(true, pred, k):
     """
     p = 0
     num = min(len(true), len(pred))
-    
+
     for tr, pr in zip(true, pred):
         if not tr:
             continue
-        
+
         p += len(set(tr) & set(pr[:k])) / min(float(k), len(tr))
-        
+
     p = p / num
     return p
 
@@ -54,13 +54,13 @@ def recall_k(true, pred, k):
     """
     r = 0
     num = min(len(true), len(pred))
-    
+
     for tr, pr in zip(true, pred):
         if not tr:
             continue
-        
+
         r += len(set(tr) & set(pr[:k])) / len(tr)
-        
+
     r = r / num
     return r
 
@@ -83,9 +83,11 @@ def MAP_k(true, pred, k):
         if not tr:
             continue
         tr_in_pr = np.isin(pr[:k], tr)
-        m += (tr_in_pr / np.arange(1, k + 1)).sum() / (1 / np.arange(1, len(tr) + 1)).sum()
+        m += (tr_in_pr / np.arange(1, k + 1)).sum() / (
+            1 / np.arange(1, len(tr) + 1)
+        ).sum()
     m = m / num
-    
+
     return m
 
 
@@ -103,7 +105,7 @@ def AR_k(true, pred, k):
     """
     if not true:
         return 0.0
-    
+
     if len(pred) > k:
         pred = pred[:k]
 
@@ -113,8 +115,8 @@ def AR_k(true, pred, k):
     for i, p in enumerate(pred):
         if p in true and p not in pred[:i]:
             hits += 1.0
-            score += hits / (i+1.0)
-    
+            score += hits / (i + 1.0)
+
     score = score / len(true)
 
     return score
@@ -133,7 +135,7 @@ def MAR_k(true, pred, k):
     score (float): Mean average recall (MAR) for the top k items recommended to multiple users.
     """
     score = np.mean([AR_k(a, p, k) for a, p in zip(true, pred)])
-    
+
     return score
 
 
@@ -170,7 +172,7 @@ def nDCG_k(y_true, y_pred, k=None):
         if idcg == 0.0:
             continue
         ndcg += dcg / idcg
-        
+
     ndcg = ndcg / len(y_true)
     return ndcg
 
@@ -184,12 +186,12 @@ def calculate_coverage(pred, num_songs):
     num_songs (int): Total number of songs.
 
     Returns:
-    cov (float): Fraction of unique songs recommended to all users, with a range from 0 to 1, where 0 indicates no songs were recommended 
+    cov (float): Fraction of unique songs recommended to all users, with a range from 0 to 1, where 0 indicates no songs were recommended
                  and 1 indicates that all songs were recommended to at least one user.
     """
     unique_songs = np.unique(pred)
     cov = len(unique_songs) / num_songs
-    
+
     return cov
 
 
@@ -203,14 +205,14 @@ def calculate_personalization(pred, num_users, num_songs):
     num_songs (int): Number of songs.
 
     Returns:
-    avg_sim (float): Average similarity between all pairs of songs recommended to different users, 
+    avg_sim (float): Average similarity between all pairs of songs recommended to different users,
                      with a range from 0 to 1, where 0 indicates no similarity and 1 indicates perfect similarity.
     """
     matrix_ohe = np.zeros((num_users, num_songs), dtype=np.float32)
-    matrix_ohe[np.arange(num_users), pred.T] = 1.
+    matrix_ohe[np.arange(num_users), pred.T] = 1.0
     sim_matrix = cosine_similarity(matrix_ohe)
     avg_sim = 1 - (sim_matrix.sum() - num_users) / (num_users * (num_users - 1))
-    
+
     return avg_sim
 
 
@@ -225,9 +227,13 @@ def calculate_novelty(predicted_items, item_frequencies):
     Returns:
     - novelty_score (float): The novelty score of the predicted items.
     """
-    all_unique_items = set(item for user_items in predicted_items for item in user_items)
-    item_distribution = np.array([item_frequencies.get(item, 1e-6) for item in all_unique_items])
+    all_unique_items = set(
+        item for user_items in predicted_items for item in user_items
+    )
+    item_distribution = np.array(
+        [item_frequencies.get(item, 1e-6) for item in all_unique_items]
+    )
     item_distribution = item_distribution / item_distribution.sum()
     novelty_score = -np.sum(item_distribution * np.log2(item_distribution))
-    
+
     return novelty_score
