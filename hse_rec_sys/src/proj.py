@@ -61,10 +61,10 @@ for genre in selected_genres:
 # Шаг 3: Отправка оценок в базу данных
 if st.button('Добавить пользователя'):
     song_ratings = st.session_state.song_ratings
-    # Здесь вы можете добавить логику для отправки оценок в базу данных
+    # Логика для отправки оценок в базу данных
     # Пример: отправка POST-запроса с данными о пользователе и его оценками
     payload = {
-        'user_id': 123,  # Замените на реальный ID пользователя
+        'user_id': 123,
         'ratings': song_ratings
     }
     res = requests.post(url='http://backend:8000/add-user', json=payload)
