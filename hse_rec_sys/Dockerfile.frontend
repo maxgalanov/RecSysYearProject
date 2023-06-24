@@ -1,0 +1,11 @@
+FROM python:3.8.16
+
+WORKDIR /app
+
+COPY requirements.txt /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app
+
+CMD ["streamlit", "run", "proj.py", "--server.port", "8501", "--server.enableCORS", "false"]

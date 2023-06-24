@@ -1,0 +1,27 @@
+version: '3.3'
+networks:
+  my_network:
+  
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+    environment:
+      - DB_URI=sqlite:////data/music.db
+    networks:
+      - my_network
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    networks:
+      - my_network
