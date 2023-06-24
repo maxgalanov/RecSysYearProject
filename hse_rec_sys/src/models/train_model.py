@@ -24,5 +24,5 @@ rank_fm.fit(
     verbose=False,
 )
 
-with open('./models/RankFm_new.pkl', 'wb') as f:
+with open('RankFm_new.pkl', 'wb') as f:
     pickle.dump(rank_fm, f)
