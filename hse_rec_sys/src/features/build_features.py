@@ -12,7 +12,7 @@ def get_data_for_train():
                     FROM song_features
                     """
 
-    conn = sqlite3.connect("../data/music.db")
+    conn = sqlite3.connect("./data/music.db")
     cur = conn.cursor()
     # Выполняем запрос
     train_users = pd.DataFrame(

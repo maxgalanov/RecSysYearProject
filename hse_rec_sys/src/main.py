@@ -5,13 +5,13 @@ from fastapi import FastAPI
 from models.rankfm_pred import get_rankfm_pred
 from typing import List
 
-from src.get_last_rankfm_model import find_latest_rankfm_model
-from src.features.build_features import get_data_for_train
-from src.models.train_model import train_rankfm_model
+from get_last_rankfm_model import find_latest_rankfm_model
+from features.build_features import get_data_for_train
+from models.train_model import train_rankfm_model
 
 latest_model = find_latest_rankfm_model()
 
-with open(latest_model, "rb") as f:
+with open(f"./models/{latest_model}", "rb") as f:
     rank_fm = pickle.load(f)
 
 app = FastAPI()
@@ -148,8 +148,12 @@ async def train_model() -> str:
     interactions_train, sample_weight_train, item_features_train = get_data_for_train()
 
     # Обучаем модель RankFM и сохраняем в pickle
+    print("rankfm training started...")
     new_rankfm, name_new_rankfm = train_rankfm_model(
         interactions_train, item_features_train, sample_weight_train
     )
     rank_fm = new_rankfm
-    return f"Модель успешно обучена и сохранена в файл: {name_new_rankfm}"
+    print(
+        f"The model has been successfully trained and saved to the file: {name_new_rankfm}"
+    )
+    return f"The model has been successfully trained and saved to the file: {name_new_rankfm}"
