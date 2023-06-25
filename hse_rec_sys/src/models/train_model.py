@@ -1,8 +1,6 @@
-import pandas as pd
 import pickle
 from rankfm.rankfm import RankFM
 from src.features.build_features import get_data_for_train
-
 
 interactions_train, sample_weight_train, item_features_train = get_data_for_train()
 
