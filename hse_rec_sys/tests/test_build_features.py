@@ -4,7 +4,7 @@ from hse_rec_sys.src.features.build_features import get_data_for_train
 
 
 def test_get_data_for_train():
-    interactions_train, sample_weight_train, item_features_train = get_data_for_train()
+    interactions_train, sample_weight_train, item_features_train = get_data_for_train(db_path='./src/data/music.db')
 
     # Проверяем, что получены не пустые DataFrame
     assert not interactions_train.empty
@@ -30,7 +30,7 @@ def test_get_data_for_train():
 
 
 def test_get_data_for_train_encoding_normalization():
-    interactions_train, sample_weight_train, item_features_train = get_data_for_train()
+    interactions_train, sample_weight_train, item_features_train = get_data_for_train(db_path='./src/data/music.db')
 
     # Проверяем, что значения в столбце 'release' были успешно закодированы
     assert len(item_features_train["release"].unique()) == len(item_features_train)
