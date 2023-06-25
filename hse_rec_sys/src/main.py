@@ -121,13 +121,16 @@ async def add_user(ratings: dict) -> None:
     return
 
 
-@app.post("/get_feedback/")
-async def get_feedback(user_id: int, feedback: dict) -> None:
+@app.post("/get_feedback")
+async def get_feedback(feedback: dict) -> None:
     # Устанавливаем соединение с базой данных
     conn = sqlite3.connect("./data/music.db")
     cur = conn.cursor()
+    print(feedback)
+    print(type(feedback))
+    user_id = feedback["user_id"]
 
-    for song_id, rating in feedback.items():
+    for song_id, rating in feedback["ratings"].items():
         cur.execute(
             f"""INSERT INTO new_users_added 
                                 (user_id, song_id, play_count)

@@ -3,29 +3,74 @@ import requests
 import pandas as pd
 
 
+# Функция для получения или создания словаря состояния сеанса
+def get_session_state():
+    if "session_state" not in st.session_state:
+        st.session_state["session_state"] = {}
+    return st.session_state["session_state"]
+
+
 def recommend_songs(num):
-    url = f'http://127.0.0.1:8000/recommend/{num}'
-    res = requests.get(url)
-    ans = res.json()
+    session_state = get_session_state()
+    if "df" not in session_state:
+        url = f"http://127.0.0.1:8000/recommend/{num}"
+        res = requests.get(url)
+        ans = res.json()
 
-    data = []
-    for item in ans:
-        song_id = item[0]
-        author = item[1]
-        song = item[2]
-        data.append([str(int(song_id)), author, song])
+        data = []
+        for item in ans:
+            song_id = item[0]
+            author = item[1]
+            song = item[2]
+            data.append([str(int(song_id)), author, song])
 
-    df = pd.DataFrame(data, columns=['song_id', 'artist', 'song'])
-    return df
+        df = pd.DataFrame(data, columns=["song_id", "artist", "song"])
+        return df
+    else:
+        df = session_state["df"]
+        return df
+
+
+def get_feedback(feedback):
+    url = "http://127.0.0.1:8000/get_feedback"
+    response = requests.post(url, json=feedback)
+    if response.status_code == 200:
+        st.success("Оценки пользователя успешно добавлены")
+    else:
+        st.error("Ошибка при добавлении оценок пользователя")
 
 
 def rec_song():
+    session_state = get_session_state()
+    if "user_ratings" not in session_state:
+        session_state["user_ratings"] = {}
+
     st.title("Введите id пользователя")
-    title = st.text_input('id')
-    if st.button('Ok'):
-        assert title.lstrip('-+').isdigit(), 'Id должен быть целым числом'
-        num = int(title)
-        assert num >= 0, 'Id должен быть неотрицательным'
-        df = recommend_songs(num)
-        st.dataframe(df)
+    title = st.text_input("id")
+    if st.button("Ok"):
+        assert title.lstrip("-+").isdigit(), "Id должен быть целым числом"
+        session_state["num"] = int(title)
+        assert session_state["num"] >= 0, "Id должен быть неотрицательным"
+        session_state["df"] = recommend_songs(session_state["num"])
+
+    if "df" in session_state:
+        st.dataframe(session_state["df"])
+        if "feedback" not in session_state:
+            session_state["feedback"] = {}
+            session_state["feedback"]["user_id"] = session_state["num"]
+        for index, row in session_state["df"].iterrows():
+            song_id = row["song_id"]
+            author = row["artist"]
+            song = row["song"]
+            rating = st.slider(f"Оцените песню '{song}' от '{author}'", 1, 9)
+            session_state["user_ratings"][song_id] = rating
+        session_state["feedback"]["ratings"] = session_state["user_ratings"]
+
+        if (
+            st.button("Добавить оценки пользователя")
+            and session_state["feedback"] != {}
+        ):
+            get_feedback(session_state["feedback"])
+            st.session_state["session_state"] = {}
+
     return
