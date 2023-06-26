@@ -1,10 +1,11 @@
 import pickle
 import sqlite3
 import random
+import asyncio
 from fastapi import FastAPI
 from models.rankfm_pred import get_rankfm_pred
 from typing import List
-
+from sqlite3 import OperationalError
 from get_last_rankfm_model import find_latest_rankfm_model
 from features.build_features import get_data_for_train
 from models.train_model import train_rankfm_model
@@ -22,8 +23,24 @@ async def recommend(user_id: int) -> List[tuple]:
     # Получаем рекомендации для пользователя
     recommendations = get_rankfm_pred(rank_fm, user_id)
 
+    # Проверка, что рекомендации уже получены и оценены
+    check_query = f"""
+    SELECT 
+        nu.song_id
+        ,sf.artist_name
+        ,sf.title
+        ,nu.play_count
+    FROM 
+        new_users_added nu
+        left join
+        song_features sf 
+        using(song_id)
+    WHERE true
+        and user_id = {user_id}
+        and song_id in ({str(recommendations).strip('[]')})
+    """
     # Запрос для получения названий песен и исполнителей
-    query = """SELECT song_id, artist_name, title
+    query = """SELECT song_id, artist_name, title, 0 as play_count
                 FROM song_features 
                 WHERE song_id IN ({})""".format(
         ",".join(["?"] * len(recommendations))
@@ -34,12 +51,20 @@ async def recommend(user_id: int) -> List[tuple]:
     cur = conn.cursor()
 
     # Выполняем запрос и получаем результат
-    result = cur.execute(query, recommendations).fetchall()
+    try:
+        check = cur.execute(check_query).fetchall()
+    except OperationalError:
+        print('Такого пользователя не существует.')
+        check = []
+    if check:
+        result = check
+    else:
+        result = cur.execute(query, recommendations).fetchall()
 
     # Закрываем соединение с базой данных
     conn.close()
 
-    # Возвращаем результат в виде списка кортежей ('song_id', 'исполнитель', 'трек')
+    # Возвращаем результат в виде списка кортежей ('song_id', 'исполнитель', 'трек', 'оценка')
     return result
 
 
@@ -96,7 +121,7 @@ async def get_popular_songs(genre: str) -> List[tuple]:
 
 
 @app.post("/add-user")
-async def add_user(ratings: dict) -> None:
+async def add_user(ratings: dict) -> int:
     # Запрос для получения max user_id
     query = """SELECT max(user_id) + 1
                 FROM new_users_added"""
@@ -118,7 +143,7 @@ async def add_user(ratings: dict) -> None:
     # Закрываем соединение с базой данных
     conn.commit()
     conn.close()
-    return
+    return new_user_id
 
 
 @app.post("/get_feedback")
@@ -152,11 +177,12 @@ async def train_model() -> str:
 
     # Обучаем модель RankFM и сохраняем в pickle
     print("rankfm training started...")
-    new_rankfm, name_new_rankfm = train_rankfm_model(
-        interactions_train, item_features_train, sample_weight_train
-    )
+
+    loop = asyncio.get_event_loop()
+    new_rankfm, name_new_rankfm = await loop.run_in_executor(None, train_rankfm_model, interactions_train,
+                                                             item_features_train, sample_weight_train)
+
     rank_fm = new_rankfm
-    print(
-        f"The model has been successfully trained and saved to the file: {name_new_rankfm}"
-    )
+    print(f"The model has been successfully trained and saved to the file: {name_new_rankfm}")
+
     return f"The model has been successfully trained and saved to the file: {name_new_rankfm}"

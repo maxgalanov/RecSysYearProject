@@ -38,7 +38,8 @@ def get_popular_songs(genre):
 def add_new_user(user_ratings):
     response = requests.post("http://127.0.0.1:8000/add-user", json=user_ratings)
     if response.status_code == 200:
-        st.success("Новый пользователь успешно добавлен")
+        new_user_id = response.json()  # Получаем new_user_id из ответа
+        st.success(f"Новый пользователь успешно добавлен. ID: {new_user_id}")
     else:
         st.error("Ошибка при добавлении нового пользователя")
 
