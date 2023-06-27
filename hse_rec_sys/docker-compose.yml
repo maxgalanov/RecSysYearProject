@@ -10,9 +10,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/data
+      - ./src/data:/app/src/data
     environment:
-      - DB_URI=sqlite:////data/music.db
+      - DB_URI=sqlite:////app/src/data/music.db
     networks:
       - my_network
   frontend:

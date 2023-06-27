@@ -4,7 +4,7 @@ import sqlite3
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 
-def get_data_for_train(db_path='./data/music.db'):
+def get_data_for_train(db_path='src/data/music.db'):
     query_1 = f"""SELECT *
                     FROM new_users_added
                     """

@@ -11,7 +11,7 @@ def get_session_state():
 
 # Функция для получения любимых жанров
 def get_genres():
-    response = requests.get("http://127.0.0.1:8000/genres")
+    response = requests.get("http://backend:8000/genres")
     if response.status_code == 200:
         genres = response.json()
         return genres
@@ -23,7 +23,7 @@ def get_genres():
 def get_popular_songs(genre):
     session_state = get_session_state()
     if genre not in session_state:
-        response = requests.get(f"http://127.0.0.1:8000/popular-songs/{genre}")
+        response = requests.get(f"http://backend:8000/popular-songs/{genre}")
         if response.status_code == 200:
             songs = response.json()
             session_state[genre] = songs
@@ -36,7 +36,7 @@ def get_popular_songs(genre):
 
 # Функция для добавления нового пользователя
 def add_new_user(user_ratings):
-    response = requests.post("http://127.0.0.1:8000/add-user", json=user_ratings)
+    response = requests.post("http://backend:8000/add-user", json=user_ratings)
     if response.status_code == 200:
         new_user_id = response.json()  # Получаем new_user_id из ответа
         st.success(f"Новый пользователь успешно добавлен. ID: {new_user_id}")

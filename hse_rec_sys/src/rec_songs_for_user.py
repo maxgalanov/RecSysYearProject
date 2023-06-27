@@ -13,7 +13,7 @@ def get_session_state():
 def recommend_songs(num):
     session_state = get_session_state()
     if "df" not in session_state:
-        url = f"http://127.0.0.1:8000/recommend/{num}"
+        url = f"http://backend:8000/recommend/{num}"
         res = requests.get(url)
         try:
             ans = res.json()
@@ -35,7 +35,7 @@ def recommend_songs(num):
 
 
 def get_feedback(feedback):
-    url = "http://127.0.0.1:8000/get_feedback"
+    url = "http://backend:8000/get_feedback"
     response = requests.post(url, json=feedback)
     if response.status_code == 200:
         st.success("Оценки пользователя успешно добавлены")
@@ -76,7 +76,6 @@ def rec_song():
             else:
                 st.dataframe(session_state["df"][['artist', 'song', 'rating']])
                 st.success("Все рекомендации уже оценены. Новые скоро появятся :)")
-                # requests.post("http://127.0.0.1:8000/train-model")
                 break
         session_state["feedback"]["ratings"] = session_state["user_ratings"]
 

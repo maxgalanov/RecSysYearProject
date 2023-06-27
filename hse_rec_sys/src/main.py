@@ -3,16 +3,16 @@ import sqlite3
 import random
 import asyncio
 from fastapi import FastAPI
-from models.rankfm_pred import get_rankfm_pred
+from src.models.rankfm_pred import get_rankfm_pred
 from typing import List
 from sqlite3 import OperationalError
-from get_last_rankfm_model import find_latest_rankfm_model
-from features.build_features import get_data_for_train
-from models.train_model import train_rankfm_model
+from src.get_last_rankfm_model import find_latest_rankfm_model
+from src.features.build_features import get_data_for_train
+from src.models.train_model import train_rankfm_model
 
 latest_model = find_latest_rankfm_model()
 
-with open(f"./models/{latest_model}", "rb") as f:
+with open(f"src/models/{latest_model}", "rb") as f:
     rank_fm = pickle.load(f)
 
 app = FastAPI()
@@ -47,7 +47,7 @@ async def recommend(user_id: int) -> List[tuple]:
     )
 
     # Устанавливаем соединение с базой данных
-    conn = sqlite3.connect("./data/music.db")
+    conn = sqlite3.connect("src/data/music.db")
     cur = conn.cursor()
 
     # Выполняем запрос и получаем результат
@@ -79,7 +79,7 @@ async def get_genres() -> List[str]:
                 LIMIT 10"""
 
     # Устанавливаем соединение с базой данных
-    conn = sqlite3.connect("./data/music.db")
+    conn = sqlite3.connect("src/data/music.db")
     cur = conn.cursor()
 
     # Выполняем запрос и получаем результат
@@ -107,7 +107,7 @@ async def get_popular_songs(genre: str) -> List[tuple]:
                 LIMIT 15"""
 
     # Устанавливаем соединение с базой данных
-    conn = sqlite3.connect("./data/music.db")
+    conn = sqlite3.connect("src/data/music.db")
     cur = conn.cursor()
 
     # Выполняем запрос и получаем результат
@@ -127,7 +127,7 @@ async def add_user(ratings: dict) -> int:
                 FROM new_users_added"""
 
     # Устанавливаем соединение с базой данных
-    conn = sqlite3.connect("./data/music.db")
+    conn = sqlite3.connect("src/data/music.db")
     cur = conn.cursor()
 
     new_user_id = cur.execute(query).fetchall()[0][0]
@@ -149,7 +149,7 @@ async def add_user(ratings: dict) -> int:
 @app.post("/get_feedback")
 async def get_feedback(feedback: dict) -> None:
     # Устанавливаем соединение с базой данных
-    conn = sqlite3.connect("./data/music.db")
+    conn = sqlite3.connect("src/data/music.db")
     cur = conn.cursor()
     print(feedback)
     print(type(feedback))

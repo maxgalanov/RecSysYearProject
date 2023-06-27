@@ -2,7 +2,7 @@ import os
 import datetime
 
 
-def find_latest_rankfm_model(directory="./models"):
+def find_latest_rankfm_model(directory="src/models"):
     # Получение списка файлов в указанной директории
     files = [
         file
